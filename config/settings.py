@@ -17,8 +17,8 @@ SECRET_KEY = config('SECRET_KEY', default='clave-local-desarrollo')
 
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = []
-
+# CORRECCIÓN: Permitir que corra localmente y en los servidores de Render
+ALLOWED_HOSTS = ['.onrender.com', '127.0.0.1', 'localhost']
 
 
 # APPLICATIONS
@@ -79,12 +79,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # DATABASE
-# Local: MySQL/phpMyAdmin
-# Railway: DATABASE_URL
-
 DATABASES = {
     'default': dj_database_url.config(
-        
         default='postgresql://postgres:postgres@localhost:5432/catalogo_plantas',
         conn_max_age=600
     )
@@ -133,12 +129,14 @@ CSRF_TRUSTED_ORIGINS = [
     "https://*.onrender.com",
 ]
 
+
 # STATIC FILES
 STATIC_URL = '/static/'
-if not DEBUG:
 
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    
+# CORRECCIÓN: STATIC_ROOT debe estar afuera del condicional para que el build command no falle
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+if not DEBUG:
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
