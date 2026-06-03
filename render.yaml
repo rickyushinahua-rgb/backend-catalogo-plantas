@@ -10,7 +10,7 @@ services:
     plan: free
     name: mysite
     runtime: python
-    # NOTA: No ponemos 'rootDir' aquí porque tu Django está suelto en la raíz del proyecto
+    rootDir: backend_django       # <-- Ahora sí, Render entrará aquí para Django
     buildCommand: './build.sh'
     startCommand: 'python -m gunicorn config.asgi:application -k uvicorn.workers.UvicornWorker'
     envVars:
@@ -23,13 +23,14 @@ services:
       - key: WEB_CONCURRENCY
         value: 4
 
+  # --- FRONTEND (REACT) ---
   - type: web
     name: catalogo-plantas-frontend
     runtime: static
     plan: free
-    rootDir: frontend_react
+    rootDir: frontend_react       # <-- Render entrará aquí para React
     buildCommand: 'npm install && npm run build'
-    publishDir: 'dist'      # <-- ¡CAMBIADO AQUÍ! Esta es la propiedad exacta que le gusta a Render
+    publishDir: 'dist'            # <-- Sintaxis de Blueprint corregida
     routes:
       - type: rewrite
         source: '/*'
