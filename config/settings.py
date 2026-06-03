@@ -17,13 +17,8 @@ SECRET_KEY = config('SECRET_KEY', default='clave-local-desarrollo')
 
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    ".railway.app",
-    ".up.railway.app",
-    ".onrender.com",
-]
+ALLOWED_HOSTS = []
+
 
 
 # APPLICATIONS
@@ -87,28 +82,13 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Local: MySQL/phpMyAdmin
 # Railway: DATABASE_URL
 
-if config('DATABASE_URL', default=None):
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=config('DATABASE_URL'),
-            conn_max_age=600,
-            ssl_require=False
-        )
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'catalogo_plantas_db',
-            'USER': 'root',
-            'PASSWORD': '',
-            'HOST': 'localhost',
-            'PORT': '3306',
-            'OPTIONS': {
-                'charset': 'utf8mb4',
-            },
-        }
-    }
+DATABASES = {
+    'default': dj_database_url.config(
+        
+        default='postgresql://postgres:postgres@localhost:5432/catalogo_plantas',
+        conn_max_age=600
+    )
+}
 
 
 # PASSWORD VALIDATION
@@ -154,10 +134,10 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 # STATIC FILES
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_URL = '/static/'
+if not DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # MEDIA FILES
