@@ -23,14 +23,13 @@ services:
       - key: WEB_CONCURRENCY
         value: 4
 
-  # --- FRONTEND (REACT) ---
   - type: web
     name: catalogo-plantas-frontend
     runtime: static
     plan: free
-    rootDir: frontend_react       # Corrección: Sintaxis exacta y nombre real de tu carpeta
+    rootDir: frontend_react
     buildCommand: 'npm install && npm run build'
-    staticPublishDir: 'dist'      # Corrección: Sintaxis exacta para el directorio de publicación
+    publishDir: 'dist'      # <-- ¡CAMBIADO AQUÍ! Esta es la propiedad exacta que le gusta a Render
     routes:
       - type: rewrite
         source: '/*'
